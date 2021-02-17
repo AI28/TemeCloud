@@ -1,23 +1,24 @@
-from weather_controller import *
-from metrics_controller import *
-from pandemic_controller import *
-from reccomendation_controller import *
+from os import getenv
+import os.path
+from subprocess import run
+
+def create_index():
+
+   with open("index.tpl", "r") as template:
+       with open("index.html", "w") as index:
+            
+            tpl_string = template.read()
+            api_key = os.getenv("GOOGLE_MAPS_KEY")
+            index.write(tpl_string % api_key)
 
 
+def main():
+   
+   if os.path.exists("index.html") is False:
+       create_index()
 
-def application (environ, start_response):
+   run(["mod_wsgi-express", "start-server", "app.py"])
 
-    http_methods = ["GET", "HEAD", "POST", "PUT", "DELETE", "CONNECT", "OPTIONS", "TRACE", "PATCH"]
-    status, response_headers, response_body = router(environ, http_methods)
-    start_response(status, response_headers)
 
-    return [response_body]
-
-def router(environ, http_methods):
-
-    routes = {"/api/v1/metrics": metrics_route, "/api/v1/getReccomendation": reccomendation_route, "/api/v1/weather": weather_route}
-
-    request_uri = environ["REQUEST_URI"].split("?")[0]
-    route_controller =  routes.get(request_uri, invalid_route) 
-
-    return route_controller(environ, http_methods)
+if __name__ == "__main__":
+    main()
