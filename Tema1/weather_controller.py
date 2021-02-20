@@ -40,10 +40,4 @@ def get_weather(environ, api_key):
     weather_endpoint = f'https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}'
     weather_request = requests.get(weather_endpoint)
 
-
     return weather_request
-
-
-
-
-    

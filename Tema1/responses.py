@@ -36,4 +36,3 @@ def method_not_allowed(method, route, route_methods):
     response_headers = [("Content-Type","text/plain"),("Content-Length",str(len(response_body)))]
 
     return status, response_headers, response_body
-

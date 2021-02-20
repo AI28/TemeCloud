@@ -1,0 +1,37 @@
+/* Set the size of the div element that contains the map */
+body{
+    font: roboto;
+    margin:0;
+    padding:0;
+    text-align: center;
+}
+#map {
+  height: 800px;
+  /* The height is 400 pixels */
+  width: 100%;
+  /* The width is the width of the web page */
+  margin: 0;
+  padding: 0;
+}
+#dates{
+  display: flex;
+  flex-direction: row;
+}
+
+.date-io{
+  display: flex;
+  flex-direction: column;
+  padding: 2%;
+  margin:0 auto;
+}
+
+label {
+  display: block;
+  font: 2rem 'Arial', sans-serif;
+}
+
+input,
+label {
+  margin: .4rem 0;
+}
+                     
