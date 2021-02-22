@@ -46,7 +46,7 @@ function initMap()
 
     const request = new XMLHttpRequest();
     const coordinates = infoWindow.position.toUrlValue().split(',');
-    request.open("POST","http://192.168.151.102:8000/api/v1/prices"); 
+    request.open("POST","http://172.17.4.60:8000/api/v1/prices"); 
 
     request.onload = function(){
       if(this.status == 200){

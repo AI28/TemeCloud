@@ -1,6 +1,8 @@
 from time import time
 from sys import getsizeof
 import json
+import os
+import os.path
 
 
 def logging(route_to_log, environ, http_methods):
@@ -19,11 +21,16 @@ def logging(route_to_log, environ, http_methods):
         "response_content_length": getsizeof(body),
         "resonse_status": status,
         "response_headers": headers,
-        "response_body": body
+        "response_body": body.decode()
     }
+    for key, value in metric_dict.items():
+        print(f"{key} - {type(value)}")
 
-    with open(f"{time()}.json", "w") as metric_serialization:
+    if os.path.exists("./metrics") is False:
+        os.mkdir("./metrics")
+
+    with open(f"./metrics/{time()}.json", "w") as metric_serialization:
         metric_json = json.dumps(metric_dict)
         metric_serialization.write(metric_json)
     
-    return status, headers, body.encode()
+    return status, headers, body
