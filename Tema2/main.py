@@ -1,6 +1,7 @@
 import os
 import os.path
 from subprocess import run
+import sys
 
 def create_index():
 
@@ -16,9 +17,16 @@ def create_index():
 
 
 def main():
-   
-    create_index()
-    run(["mod_wsgi-express", "start-server","--url-alias", "/static","./static", "app.py"])
+    
+    web_app_startup = ["mod_wsgi-express", "start-server"]
+
+    if "serve-front" in sys.argv:
+        create_index()
+        web_app_startup.append("--url-alias", "/static", "./static")
+
+    web_app_startup.append("app.py")
+
+    run(web_app_startup)
 
 if __name__ == "__main__":
     main()
