@@ -71,7 +71,7 @@ def post(body):
     except ValueError as ve:
         return False
 
-    return bson.json_util.dumps(result)
+    return bson.json_util.dumps(result), body["id"]
 
 
 def put(author_id, body):

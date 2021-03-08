@@ -30,15 +30,16 @@ def resource_response(environ, status_code_key, body, resource_type):
 
    return status_code, response_headers, resource_response_json
 
-def resource_post(environ, status_code_key, body, resource_type):
+def resource_post(environ, status_code_key, body, obj_id, resource_type):
 
    status_code = status_codes[status_code_key]
    resource_response = {resource_type:body}
-   print(body)
    resource_response["interactions"] = {}
+   
+   url = environ["REQUEST_URI"] + "/" + obj_id
 
    resource_response["interactions"]["delete"] = \
-       {"method": "DELETE", "uri": environ["REQUEST_URI"]}
+       {"method": "DELETE", "uri": url}
 
    
    resource_response_json = json.dumps(resource_response)
@@ -54,13 +55,12 @@ def resource_put(environ, status_code_key, body, resource_type):
 
    status_code = status_codes[status_code_key]
    resource_response = {resource_type:body}
-   print(body)
-   print(type(body))
-   [print(value) for key, value in body.items()]
    resource_response["interactions"] = {}
 
    resource_response["interactions"]["delete"] = \
-       {"method": "DELETE", "uri": environ["REQUEST_URI"]}
+       {"method": "DELETE", "uri": environ["REQUEST_URI"]+"/"+body["id"]}
+
+   print(environ["REQUEST_URI"]+"/"+body["id"])
 
    resource_response_json = json.dumps(resource_response)
    resource_response_json = resource_response_json.encode()

@@ -52,12 +52,12 @@ def collection_route(environ):
     elif request_method == "POST":
        
        body = get_req_body(environ)
-       result = booksRepository.post(body)
+       result, obj_id = booksRepository.post(body)
        status_code_key = 0
 
        if result is not False:
            status_code_key = 201
-           return resource_post(environ, status_code_key, result, "book")
+           return resource_post(environ, status_code_key, result, obj_id, "book")
        else:
            return "404 Not Found", [], []
        
@@ -112,4 +112,4 @@ def resource_route(environ):
         else:
             status_code_key = 201
             del body["_id"]
-            return resource_post(environ, status_code_key, body, "book")
+            return resource_put(environ, status_code_key, body, "book")
