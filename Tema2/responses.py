@@ -40,6 +40,8 @@ def resource_post(environ, status_code_key, body, obj_id, resource_type):
 
    resource_response["interactions"]["delete"] = \
        {"method": "DELETE", "uri": url}
+   resource_response["interactions"]["get"] = \
+       {"method": "GET", "uri": url}
 
    
    resource_response_json = json.dumps(resource_response)
@@ -57,10 +59,12 @@ def resource_put(environ, status_code_key, body, resource_type):
    resource_response = {resource_type:body}
    resource_response["interactions"] = {}
 
-   resource_response["interactions"]["delete"] = \
-       {"method": "DELETE", "uri": environ["REQUEST_URI"]+"/"+body["id"]}
+   url = environ["REQUEST_URI"]
 
-   print(environ["REQUEST_URI"]+"/"+body["id"])
+   resource_response["interactions"]["delete"] = \
+       {"method": "DELETE", "uri": url}
+   resource_response["interactions"]["get"] = \
+       {"method": "GET", "url": url}
 
    resource_response_json = json.dumps(resource_response)
    resource_response_json = resource_response_json.encode()
@@ -82,8 +86,8 @@ def deleted_resource(status_code_key, resource_type):
 def invalid_route(environ, http_methods):
 
     status = "404 Not Found"
-    response_body = "%s is not a valid route." % environ["REQUEST_URI"]
-    response_body = response_body.encode()
+    response_body = {"message":"%s is not a valid route." % environ["REQUEST_URI"]}
+    response_body = json.dumps(response_body).encode()
     response_headers = [("Content-Type","text/plain"),("Content-Length", str(len(response_body)))]
 
     return status, response_headers, response_body
@@ -92,17 +96,17 @@ def invalid_route(environ, http_methods):
 def resource_not_found(environ, http_methods):
 
     status = status_codes[404]
-    response_body = "Resource at uri %s not found" % environ["REQUEST_URI"]
-    response_body = response_body.encode()
+    response_headers = [("Content-Type", "application/json")]
+    response_body = {"error":"Resource at uri %s not found" % environ["REQUEST_URI"],"interactions":{"put":environ["REQUEST_URI"], "post":environ["REQUEST_URI"].rsplit("/",1)[0]}}
 
-    return status, [], response_body
+    return status, response_headers, json.dumps(response_body).encode()
 
 
 def bad_request(method, http_methods):
 
     status = "400 Bad Request"
-    response_body = "%s is not a valid HTTP Method. RFC 7231 HTTP Methods are: %s" % (method, http_methods)
-    response_body = response_body.encode()
+    response_body = {"message":"%s is not a valid HTTP Method. RFC 7231 HTTP Methods are: %s" % (method, http_methods)}
+    response_body = json.dumps(response_body).encode()
     response_headers = [("Content-Type","text/plain"),("Content-Length", str(len(response_body)))]
 
     return status, response_headers, response_body
@@ -111,8 +115,8 @@ def bad_request(method, http_methods):
 def method_not_allowed(method, route, route_methods):
 
     status = "405 Method Not Allowed"
-    response_body = "%s is not a valid verb for route %s. Use one of the following: %s" % (method, route, " ".join(route_methods))
-    response_body = response_body.encode()
+    response_body = {"message":"%s is not a valid verb for route %s. Use one of the following: %s" % (method, route, " ".join(route_methods))}
+    response_body = json.dumps(response_body).encode()
     response_headers = [("Content-Type","text/plain"),("Content-Length",str(len(response_body)))]
 
     return status, response_headers, response_body

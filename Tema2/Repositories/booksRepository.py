@@ -65,7 +65,10 @@ def post(body):
 
     try:
         next_id = booksCollection.get_max("id")
-        body["id"] = str(int(next_id["id"]) + 1)
+        if next_id is not None:
+            body["id"] = str(int(next_id["id"]) + 1)
+        else:
+            body["id"] = "0"
         result = booksCollection.insert_item(body)
     except ValueError as ve:
         return False

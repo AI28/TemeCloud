@@ -80,10 +80,10 @@ def resource_route(environ):
 
        if result is False:
            status_code_key = 404
+           return resource_not_found(environ, allowed_methods)
        else:
            status_code_key = 200 
-
-       return resource_response(environ, status_code_key, result, "book")
+           return resource_response(environ, status_code_key, result, "book")
 
     elif request_method == "DELETE":
         
